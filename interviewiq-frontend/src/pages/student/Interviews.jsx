@@ -1,54 +1,58 @@
-import { useState } from 'react'
-import { Calendar, Video, Clock, CheckCircle, XCircle, ChevronRight, MessageSquare } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Calendar, Video, Clock, CheckCircle, XCircle, ChevronRight, MessageSquare, Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import api from '../../api/axios'
 
 export default function Interviews() {
   const [activeTab, setActiveTab] = useState('upcoming')
   const navigate = useNavigate()
+  
+  const [upcomingInterviews, setUpcomingInterviews] = useState([])
+  const [pastInterviews, setPastInterviews] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const upcomingInterviews = [
-    {
-      id: 1,
-      company: 'TCS',
-      type: 'Technical Round',
-      date: 'Tomorrow',
-      time: '10:00 AM',
-      duration: '45 mins',
-      interviewer: 'AI Assistant',
-      link: '/student/interviews/session-1'
-    },
-    {
-      id: 2,
-      company: 'Infosys',
-      type: 'HR Round',
-      date: 'Oct 25, 2023',
-      time: '2:00 PM',
-      duration: '30 mins',
-      interviewer: 'Live HR',
-      link: '#'
-    }
-  ]
+  useEffect(() => {
+    const fetchInterviews = async () => {
+      try {
+        setLoading(true)
+        const [upcomingRes, historyRes] = await Promise.all([
+          api.get('/interviews/upcoming/me'),
+          api.get('/interviews/history/me')
+        ])
 
-  const pastInterviews = [
-    {
-      id: 3,
-      company: 'Cognizant',
-      type: 'Aptitude & Technical',
-      date: 'Oct 10, 2023',
-      score: '85%',
-      status: 'Passed',
-      feedback: 'Strong problem solving, needs work on system design basics.'
-    },
-    {
-      id: 4,
-      company: 'Wipro',
-      type: 'Coding Test',
-      date: 'Oct 05, 2023',
-      score: '60%',
-      status: 'Needs Improvement',
-      feedback: 'Failed 2 hidden test cases. Time complexity was O(n^2) instead of O(n).'
+        const mapUpcoming = (item) => ({
+          id: item.id,
+          company: item.company || 'Practice',
+          type: item.interviewType || 'Mock Round',
+          date: new Date(item.scheduledAt).toLocaleDateString(),
+          time: new Date(item.scheduledAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+          duration: item.durationSeconds ? `${Math.floor(item.durationSeconds/60)} mins` : 'Flexible',
+          interviewer: 'AI Assistant',
+          link: `/student/interviews/session-${item.id}`
+        })
+
+        const mapHistory = (item) => ({
+          id: item.id,
+          company: item.company || 'Practice',
+          type: item.interviewType || 'Mock Round',
+          date: item.scheduledAt ? new Date(item.scheduledAt).toLocaleDateString() : 'Past',
+          score: item.overallScore ? `${item.overallScore}%` : 'N/A',
+          status: item.overallScore && item.overallScore >= 70 ? 'Passed' : 'Needs Improvement',
+          feedback: item.feedback || 'No feedback available.'
+        })
+
+        setUpcomingInterviews(upcomingRes.data.map(mapUpcoming))
+        setPastInterviews(historyRes.data.map(mapHistory))
+      } catch (error) {
+        console.error('Error fetching interviews:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+    fetchInterviews()
+  }, [])
+
+
 
   return (
     <div className="p-8">
@@ -81,7 +85,11 @@ export default function Interviews() {
         </div>
       </div>
 
-      {activeTab === 'upcoming' && (
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <Loader2 className="animate-spin text-indigo-500" size={32} />
+        </div>
+      ) : activeTab === 'upcoming' && (
         <div className="grid gap-4">
           {upcomingInterviews.map((interview) => (
             <div key={interview.id} className="surface-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all hover:bg-white/5">
@@ -106,10 +114,13 @@ export default function Interviews() {
               </button>
             </div>
           ))}
+          {upcomingInterviews.length === 0 && (
+            <div className="text-center py-12 text-gray-400">No upcoming interviews scheduled.</div>
+          )}
         </div>
       )}
 
-      {activeTab === 'past' && (
+      {!loading && activeTab === 'past' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {pastInterviews.map((interview) => (
             <div key={interview.id} className="surface-card flex flex-col h-full">
@@ -136,10 +147,13 @@ export default function Interviews() {
               </div>
             </div>
           ))}
+          {pastInterviews.length === 0 && (
+            <div className="text-center py-12 text-gray-400 col-span-full">No past interview history found.</div>
+          )}
         </div>
       )}
 
-      {activeTab === 'practice' && (
+      {!loading && activeTab === 'practice' && (
         <div className="text-center py-16 surface-card border-dashed">
           <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
             <Video className="text-gray-400" size={24} />

@@ -1,6 +1,25 @@
-import { TrendingUp, Target, Award, AlertCircle } from 'lucide-react'
+import { TrendingUp, Target, Award, AlertCircle, Loader2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import api from '../../api/axios'
 
 export default function Analytics() {
+  const [analyticsData, setAnalyticsData] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await api.get('/analytics/me')
+        setAnalyticsData(response.data)
+      } catch (error) {
+        console.error('Error fetching analytics:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchAnalytics()
+  }, [])
+
   const categories = [
     { name: 'Data Structures', score: 85, color: 'bg-indigo-500' },
     { name: 'Algorithms', score: 70, color: 'bg-blue-500' },
@@ -11,6 +30,14 @@ export default function Analytics() {
 
   const strengths = ['Graph Algorithms', 'Clear Articulation', 'SQL Queries']
   const weaknesses = ['Dynamic Programming', 'High-level System Design']
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[50vh]">
+        <Loader2 className="animate-spin text-indigo-500" size={40} />
+      </div>
+    )
+  }
 
   return (
     <div className="p-8">
@@ -25,12 +52,12 @@ export default function Analytics() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="surface-card flex items-center gap-4">
           <div className="w-14 h-14 rounded-full border-4 border-indigo-500 flex items-center justify-center font-bold text-xl">
-            78
+            {analyticsData?.history?.length > 0 ? analyticsData.history[0].readinessScore : 0}
           </div>
           <div>
             <div className="text-sm text-gray-400 font-medium">Readiness Score</div>
             <div className="text-xs text-indigo-400 mt-1 flex items-center gap-1">
-              <TrendingUp size={12} /> +5% this week
+              <TrendingUp size={12} /> Latest
             </div>
           </div>
         </div>
@@ -40,7 +67,7 @@ export default function Analytics() {
           </div>
           <div>
             <div className="text-sm text-gray-400 font-medium">Interviews Taken</div>
-            <div className="text-xl font-bold mt-0.5">12</div>
+            <div className="text-xl font-bold mt-0.5">{analyticsData?.totalSessions || 0}</div>
           </div>
         </div>
         <div className="surface-card flex items-center gap-4">
@@ -49,7 +76,7 @@ export default function Analytics() {
           </div>
           <div>
             <div className="text-sm text-gray-400 font-medium">Badges Earned</div>
-            <div className="text-xl font-bold mt-0.5">4</div>
+            <div className="text-xl font-bold mt-0.5">0</div>
           </div>
         </div>
       </div>

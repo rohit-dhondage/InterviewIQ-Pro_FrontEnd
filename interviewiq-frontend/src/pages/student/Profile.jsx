@@ -1,11 +1,32 @@
-import { useState } from 'react'
-import { User, Mail, Book, MapPin, Upload, Link, ExternalLink } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { User, Mail, Book, MapPin, Upload, Link as LinkIcon, ExternalLink, Loader2 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import api from '../../api/axios'
 
 export default function Profile() {
   const { user } = useAuth()
   const [skills, setSkills] = useState(['React', 'Node.js', 'MongoDB', 'Java', 'Spring Boot'])
   const [newSkill, setNewSkill] = useState('')
+  
+  const [profileData, setProfileData] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get('/students/me/profile')
+        setProfileData(response.data)
+        if (response.data.skills && response.data.skills.length > 0) {
+          setSkills(response.data.skills)
+        }
+      } catch (err) {
+        console.error('Failed to fetch profile', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProfile()
+  }, [])
 
   const handleAddSkill = (e) => {
     e.preventDefault()
@@ -17,6 +38,14 @@ export default function Profile() {
 
   const handleRemoveSkill = (skillToRemove) => {
     setSkills(skills.filter(s => s !== skillToRemove))
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[50vh]">
+        <Loader2 className="animate-spin text-indigo-500" size={40} />
+      </div>
+    )
   }
 
   return (
@@ -43,11 +72,11 @@ export default function Profile() {
             <h3 className="font-semibold mb-4 border-b border-white/10 pb-2">Social Links</h3>
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-sm text-gray-300">
-                <Link size={18} className="text-gray-400" />
+                <LinkIcon size={18} className="text-gray-400" />
                 <input type="text" placeholder="github.com/username" className="input py-1.5 px-3 w-full" defaultValue="github.com/johndoe" />
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-300">
-                <Link size={18} className="text-gray-400" />
+                <LinkIcon size={18} className="text-gray-400" />
                 <input type="text" placeholder="linkedin.com/in/username" className="input py-1.5 px-3 w-full" defaultValue="linkedin.com/in/johndoe" />
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-300">
@@ -67,20 +96,20 @@ export default function Profile() {
                 <label className="block text-xs font-medium text-gray-400 mb-1">College/University</label>
                 <div className="flex items-center gap-2">
                   <Book size={16} className="text-gray-500" />
-                  <span className="text-sm">Engineering College Pune</span>
+                  <span className="text-sm">{profileData?.college?.name || 'N/A'}</span>
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-400 mb-1">Branch/Degree</label>
-                <div className="text-sm">B.Tech - Computer Science</div>
+                <div className="text-sm">{profileData?.department?.name || 'N/A'}</div>
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-400 mb-1">Graduation Year</label>
-                <div className="text-sm">2024</div>
+                <div className="text-sm">{profileData?.year || 'N/A'}</div>
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-400 mb-1">CGPA</label>
-                <div className="text-sm">8.75</div>
+                <div className="text-sm">{profileData?.cgpa || 'N/A'}</div>
               </div>
             </div>
           </div>
