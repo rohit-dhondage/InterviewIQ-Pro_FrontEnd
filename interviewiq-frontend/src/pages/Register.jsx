@@ -19,25 +19,33 @@ export default function Register() {
 
   // Fetch colleges on mount
   useEffect(() => {
-    // In a real app, this would be a public endpoint. 
-    // Mocking for now since we don't have a public colleges endpoint in the plan.
-    setColleges([
-      { id: 1, name: 'VJTI Mumbai' },
-      { id: 2, name: 'COEP Pune' }
-    ])
+    const fetchColleges = async () => {
+      try {
+        const response = await api.get('/colleges')
+        setColleges(response.data)
+      } catch (err) {
+        console.error('Failed to fetch colleges:', err)
+      }
+    }
+    fetchColleges()
   }, [])
 
   // Fetch departments when college changes
   useEffect(() => {
-    if (selectedCollegeId) {
-      setDepartments([
-        { id: 1, name: 'Computer Engineering' },
-        { id: 2, name: 'Information Technology' },
-        { id: 3, name: 'Electronics & Telecommunication' }
-      ])
-    } else {
-      setDepartments([])
+    const fetchDepartments = async () => {
+      if (selectedCollegeId) {
+        try {
+          const response = await api.get(`/colleges/${selectedCollegeId}/departments`)
+          setDepartments(response.data)
+        } catch (err) {
+          console.error('Failed to fetch departments:', err)
+          setDepartments([])
+        }
+      } else {
+        setDepartments([])
+      }
     }
+    fetchDepartments()
   }, [selectedCollegeId])
 
   const onSubmit = async (data) => {

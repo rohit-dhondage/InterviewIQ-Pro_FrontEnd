@@ -1,42 +1,37 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, Filter, Briefcase, MapPin, DollarSign, Clock, CheckCircle } from 'lucide-react'
+import api from '../../api/axios'
 
 export default function Drives() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState('All')
+  const [drives, setDrives] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const drives = [
-    {
-      id: 1,
-      company: 'TCS',
-      role: 'Software Engineer',
-      location: 'Pan India',
-      ctc: '7-9 LPA',
-      deadline: '2023-10-15',
-      status: 'Open',
-      type: 'Full Time'
-    },
-    {
-      id: 2,
-      company: 'Cognizant',
-      role: 'GenC Developer',
-      location: 'Pune, Bangalore',
-      ctc: '4-6.5 LPA',
-      deadline: '2023-10-20',
-      status: 'Applied',
-      type: 'Full Time'
-    },
-    {
-      id: 3,
-      company: 'Google',
-      role: 'SRE Intern',
-      location: 'Hyderabad',
-      ctc: '1L / month',
-      deadline: '2023-11-01',
-      status: 'Open',
-      type: 'Internship'
+  useEffect(() => {
+    const fetchDrives = async () => {
+      try {
+        const response = await api.get('/students/me/jobs/drives')
+        // Map backend PlacementDrive entity to UI format
+        const mappedDrives = response.data.map(d => ({
+          id: d.id,
+          company: d.company?.name || 'Unknown Company',
+          role: d.name, // e.g. "Google Campus Recruitment"
+          location: d.company?.address || 'Pan India',
+          ctc: 'Varies by Role',
+          deadline: d.endDate,
+          status: d.isActive ? 'Open' : 'Closed',
+          type: 'Campus Drive'
+        }))
+        setDrives(mappedDrives)
+      } catch (err) {
+        console.error('Failed to fetch drives:', err)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+    fetchDrives()
+  }, [])
 
   const filteredDrives = drives.filter(d => 
     d.company.toLowerCase().includes(searchTerm.toLowerCase()) &&
