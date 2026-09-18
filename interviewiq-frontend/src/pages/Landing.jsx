@@ -43,11 +43,13 @@ export default function Landing() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
           <a href="#features" style={{ color: 'var(--muted)', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>Features</a>
-          <a href="#how" style={{ color: 'var(--muted)', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>How It Works</a>
+          <Link to="/student/login" style={{ color: 'var(--muted)', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>For Students</Link>
+          <Link to="/institution/tpo/login" style={{ color: 'var(--muted)', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>For Colleges</Link>
+          <Link to="/company/login" style={{ color: 'var(--muted)', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>For Recruiters</Link>
+          <a href="#how" style={{ color: 'var(--muted)', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>About</a>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Link to="/login" style={{ color: 'var(--muted)', fontSize: 14, fontWeight: 500, textDecoration: 'none', padding: '8px 16px' }}>Log in</Link>
-          <Link to="/register" className="btn-primary">Get Started →</Link>
+          <Link to="/student/login" className="btn-primary">Get Started</Link>
         </div>
       </nav>
 
@@ -70,12 +72,12 @@ export default function Landing() {
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <Link to="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', textDecoration: 'none', boxShadow: '0 4px 20px rgba(124,58,237,0.3)', transition: 'transform 0.15s' }}>
-              Get Started Free <ArrowRight size={16} />
+            <Link to="/student/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', textDecoration: 'none', boxShadow: '0 4px 20px rgba(124,58,237,0.3)', transition: 'transform 0.15s' }}>
+              Get Started <ArrowRight size={16} />
             </Link>
-            <a href="#how" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', textDecoration: 'none' }}>
-              <Play size={14} /> Watch Demo
-            </a>
+            <Link to="/institution/tpo/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', textDecoration: 'none' }}>
+              Institution Portal
+            </Link>
           </div>
 
           {/* Stats */}
@@ -191,8 +193,8 @@ export default function Landing() {
             <p style={{ fontSize: 16, color: 'var(--muted)', marginTop: 10 }}>Join 1,200+ students already preparing smarter.</p>
           </div>
           <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexShrink: 0 }}>
-            <Link to="/register" className="btn-primary" style={{ padding: '14px 28px', fontSize: 15 }}>Get Started Free →</Link>
-            <Link to="/login" className="btn-outline" style={{ padding: '13px 24px', fontSize: 15 }}>Log in</Link>
+            <Link to="/student/login" className="btn-primary" style={{ padding: '14px 28px', fontSize: 15 }}>Student Portal →</Link>
+            <Link to="/company/login" className="btn-outline" style={{ padding: '13px 24px', fontSize: 15 }}>Recruiter Login</Link>
           </div>
         </div>
       </section>

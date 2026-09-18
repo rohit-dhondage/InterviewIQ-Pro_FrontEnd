@@ -7,7 +7,7 @@ export default function Profile() {
   const { user } = useAuth()
   const [skills, setSkills] = useState(['React', 'Node.js', 'MongoDB', 'Java', 'Spring Boot'])
   const [newSkill, setNewSkill] = useState('')
-  
+
   const [profileData, setProfileData] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -125,9 +125,9 @@ export default function Profile() {
               ))}
             </div>
             <form onSubmit={handleAddSkill} className="flex gap-2">
-              <input 
-                type="text" 
-                placeholder="Add a skill..." 
+              <input
+                type="text"
+                placeholder="Add a skill..."
                 className="input py-1.5 px-3 text-sm flex-grow"
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
@@ -145,7 +145,7 @@ export default function Profile() {
               <p className="text-sm font-medium mb-1">Click to upload or drag and drop</p>
               <p className="text-xs text-gray-500">PDF (Max. 5MB)</p>
             </div>
-            
+
             <div className="mt-4 p-3 bg-white/5 rounded-lg flex items-center justify-between border border-white/10">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-red-500/20 text-red-400 rounded flex items-center justify-center text-xs font-bold">PDF</div>
@@ -157,7 +157,7 @@ export default function Profile() {
               <button className="text-indigo-400 text-sm hover:text-indigo-300 font-medium">View</button>
             </div>
           </div>
-          
+
           <div className="flex justify-end pt-4">
             <button className="btn btn-primary px-8">Save Changes</button>
           </div>

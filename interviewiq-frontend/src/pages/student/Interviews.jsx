@@ -6,7 +6,7 @@ import api from '../../api/axios'
 export default function Interviews() {
   const [activeTab, setActiveTab] = useState('upcoming')
   const navigate = useNavigate()
-  
+
   const [upcomingInterviews, setUpcomingInterviews] = useState([])
   const [pastInterviews, setPastInterviews] = useState([])
   const [loading, setLoading] = useState(true)
@@ -25,8 +25,8 @@ export default function Interviews() {
           company: item.company || 'Practice',
           type: item.interviewType || 'Mock Round',
           date: new Date(item.scheduledAt).toLocaleDateString(),
-          time: new Date(item.scheduledAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-          duration: item.durationSeconds ? `${Math.floor(item.durationSeconds/60)} mins` : 'Flexible',
+          time: new Date(item.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          duration: item.durationSeconds ? `${Math.floor(item.durationSeconds / 60)} mins` : 'Flexible',
           interviewer: 'AI Assistant',
           link: `/student/interviews/session-${item.id}`
         })
@@ -61,22 +61,22 @@ export default function Interviews() {
           <h1 className="text-2xl font-bold mb-1">My Interviews</h1>
           <p className="text-sm" style={{ color: 'var(--muted)' }}>Manage your upcoming sessions and review past performance.</p>
         </div>
-        
+
         {/* Tabs */}
         <div className="flex bg-white/5 p-1 rounded-lg border border-white/10 w-fit">
-          <button 
+          <button
             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'upcoming' ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
             onClick={() => setActiveTab('upcoming')}
           >
             Upcoming
           </button>
-          <button 
+          <button
             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'past' ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
             onClick={() => setActiveTab('past')}
           >
             Past Feedback
           </button>
-          <button 
+          <button
             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'practice' ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
             onClick={() => setActiveTab('practice')}
           >
@@ -106,7 +106,7 @@ export default function Interviews() {
                   </div>
                 </div>
               </div>
-              <button 
+              <button
                 className="btn btn-primary whitespace-nowrap"
                 onClick={() => navigate(interview.link)}
               >

@@ -4,8 +4,13 @@ import ProtectedRoute from './components/Layout/ProtectedRoute'
 
 // Public Pages
 import Landing from './pages/Landing'
-import Login from './pages/Login'
-import Register from './pages/Register'
+
+// Auth Pages (Portals)
+import StudentLogin from './pages/auth/StudentLogin'
+// import StudentRegister from './pages/auth/StudentRegister' // TODO: Implement StudentRegister
+import TpoLogin from './pages/auth/TpoLogin'
+import AdminLogin from './pages/auth/AdminLogin'
+import CompanyLogin from './pages/auth/CompanyLogin'
 
 // Student Pages
 import StudentLayout from './components/Layout/StudentLayout'
@@ -22,6 +27,7 @@ import TpoDashboard from './pages/tpo/Dashboard'
 import TpoStudents from './pages/tpo/Students'
 import TpoDrives from './pages/tpo/Drives'
 import TpoApplications from './pages/tpo/Applications'
+import TpoAnalytics from './pages/tpo/Analytics'
 
 // Admin Pages
 import AdminLayout from './components/Layout/AdminLayout'
@@ -30,6 +36,10 @@ import AdminColleges from './pages/admin/Colleges'
 import AdminCompanies from './pages/admin/Companies'
 import AdminTpos from './pages/admin/Tpos'
 
+// Company Pages
+import CompanyLayout from './components/Layout/CompanyLayout'
+import CompanyDashboard from './pages/company/Dashboard'
+
 export default function App() {
   return (
     <AuthProvider>
@@ -37,8 +47,17 @@ export default function App() {
         <Routes>
           {/* Public */}
           <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          
+          {/* Auth / Portals */}
+          <Route path="/student/login" element={<StudentLogin />} />
+          <Route path="/student/register" element={<Navigate to="/student/login" replace />} /> {/* Placeholder */}
+          <Route path="/institution/tpo/login" element={<TpoLogin />} />
+          <Route path="/institution/admin/login" element={<AdminLogin />} />
+          <Route path="/company/login" element={<CompanyLogin />} />
+          
+          {/* Redirect old generic login/register */}
+          <Route path="/login" element={<Navigate to="/student/login" replace />} />
+          <Route path="/register" element={<Navigate to="/student/register" replace />} />
 
           {/* Student Portal */}
           <Route path="/student" element={<ProtectedRoute role="STUDENT"><StudentLayout /></ProtectedRoute>}>
@@ -58,6 +77,7 @@ export default function App() {
             <Route path="students" element={<TpoStudents />} />
             <Route path="drives" element={<TpoDrives />} />
             <Route path="applications" element={<TpoApplications />} />
+            <Route path="analytics" element={<TpoAnalytics />} />
           </Route>
 
           {/* Admin Portal */}
@@ -67,6 +87,12 @@ export default function App() {
             <Route path="colleges" element={<AdminColleges />} />
             <Route path="companies" element={<AdminCompanies />} />
             <Route path="tpos" element={<AdminTpos />} />
+          </Route>
+
+          {/* Company Portal */}
+          <Route path="/company" element={<ProtectedRoute role="RECRUITER"><CompanyLayout /></ProtectedRoute>}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<CompanyDashboard />} />
           </Route>
 
           {/* Fallback */}

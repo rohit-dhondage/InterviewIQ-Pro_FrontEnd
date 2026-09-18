@@ -33,7 +33,7 @@ export default function Drives() {
     fetchDrives()
   }, [])
 
-  const filteredDrives = drives.filter(d => 
+  const filteredDrives = drives.filter(d =>
     d.company.toLowerCase().includes(searchTerm.toLowerCase()) &&
     (filter === 'All' || d.status === filter)
   )
@@ -48,7 +48,7 @@ export default function Drives() {
         <div className="flex gap-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-            <input 
+            <input
               type="text"
               placeholder="Search companies..."
               className="input pl-9 w-full md:w-64"
@@ -57,7 +57,7 @@ export default function Drives() {
             />
           </div>
           <div className="relative">
-            <select 
+            <select
               className="input appearance-none pl-4 pr-10"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
@@ -126,7 +126,7 @@ export default function Drives() {
           </div>
         ))}
       </div>
-      
+
       {filteredDrives.length === 0 && (
         <div className="text-center py-12 surface-card border-dashed">
           <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
