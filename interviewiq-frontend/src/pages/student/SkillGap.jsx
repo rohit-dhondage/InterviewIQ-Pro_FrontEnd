@@ -19,46 +19,112 @@ const STUDENT_SKILLS = {
 }
 
 const COMPANY_REQUIREMENTS = {
-  TCS: {
-    skills: { 'SQL & DBMS': 70, 'OOP & Java': 65, 'Communication': 60, 'Operating Systems': 55 },
+  'TCS Ninja': {
+    company: 'TCS', tier: 'Ninja (3.6 LPA)',
+    skills: { 'SQL & DBMS': 65, 'OOP & Java': 60, 'Communication': 60, 'Operating Systems': 55 },
     cgpa: 6.0, backlogs: 0,
-    description: 'TCS values strong fundamentals with SQL, OOP, and communication skills.',
+    description: 'TCS Ninja values strong foundational quant, SQL, OOP, and communication skills.',
   },
-  Infosys: {
-    skills: { 'Data Structures': 65, 'SQL & DBMS': 65, 'Communication': 65, 'OOP & Java': 60 },
+  'TCS Digital': {
+    company: 'TCS', tier: 'Digital (7.5 LPA)',
+    skills: { 'Data Structures': 75, 'Algorithms': 70, 'SQL & DBMS': 75, 'OOP & Java': 75 },
     cgpa: 6.5, backlogs: 0,
-    description: 'Infosys focuses on problem-solving, SQL, and aptitude.',
+    description: 'TCS Digital requires medium-hard DSA (Trees, DP), advanced SQL, and system logic.',
   },
-  Wipro: {
-    skills: { 'OOP & Java': 60, 'Communication': 60, 'SQL & DBMS': 55 },
+  'TCS Prime': {
+    company: 'TCS', tier: 'Prime (11.5 LPA)',
+    skills: { 'Data Structures': 85, 'Algorithms': 80, 'System Design': 70, 'OOP & Java': 80 },
+    cgpa: 7.0, backlogs: 0,
+    description: 'TCS Prime demands high performance algorithms, cloud architecture, and GenAI concepts.',
+  },
+  'Infosys SE': {
+    company: 'Infosys', tier: 'System Engineer (3.6 LPA)',
+    skills: { 'Communication': 65, 'OOP & Java': 60, 'SQL & DBMS': 60 },
     cgpa: 6.0, backlogs: 0,
-    description: 'Wipro seeks well-rounded candidates with good communication.',
+    description: 'Infosys SE focuses on pseudocode analysis, aptitude, and fundamental programming.',
   },
-  Google: {
-    skills: { 'Data Structures': 85, 'Algorithms': 85, 'System Design': 70, 'OOP & Java': 75 },
-    cgpa: 7.5, backlogs: 0,
-    description: 'Google requires exceptional DSA, algorithms, and system design knowledge.',
+  'Infosys SP': {
+    company: 'Infosys', tier: 'Specialist Programmer (9.5 LPA)',
+    skills: { 'Data Structures': 85, 'Algorithms': 85, 'System Design': 65, 'OOP & Java': 80 },
+    cgpa: 6.5, backlogs: 0,
+    description: 'Infosys SP is for top competitive coders with graph algorithms and dynamic programming.',
   },
-  Amazon: {
-    skills: { 'Data Structures': 80, 'Algorithms': 75, 'System Design': 65, 'Communication': 70 },
-    cgpa: 7.0, backlogs: 0,
-    description: 'Amazon focuses on Leadership Principles + strong DSA.',
-  },
-  Microsoft: {
-    skills: { 'Data Structures': 78, 'Algorithms': 72, 'System Design': 60, 'OOP & Java': 70 },
-    cgpa: 7.0, backlogs: 0,
-    description: 'Microsoft values clean code, problem-solving, and teamwork.',
-  },
-  Cognizant: {
-    skills: { 'SQL & DBMS': 65, 'Communication': 65, 'OOP & Java': 55 },
+  'Cognizant GenC': {
+    company: 'Cognizant', tier: 'GenC (4.0 LPA)',
+    skills: { 'Communication': 65, 'SQL & DBMS': 60, 'OOP & Java': 55 },
     cgpa: 6.0, backlogs: 1,
-    description: 'Cognizant emphasizes communication and database knowledge.',
+    description: 'Cognizant GenC emphasizes communication and basic database queries.',
+  },
+  'Cognizant GenC Pro': {
+    company: 'Cognizant', tier: 'GenC Pro (10 LPA)',
+    skills: { 'Data Structures': 75, 'System Design': 65, 'OOP & Java': 75, 'SQL & DBMS': 70 },
+    cgpa: 6.5, backlogs: 0,
+    description: 'GenC Pro requires full stack Java Spring / React skills and microservice engineering.',
+  },
+  'Amex Tech Associate': {
+    company: 'Amex', tier: 'Software Engineer (22 LPA)',
+    skills: { 'Data Structures': 80, 'Algorithms': 80, 'System Design': 75, 'OOP & Java': 80 },
+    cgpa: 7.0, backlogs: 0,
+    description: 'American Express demands solid DSA, object-oriented design, and high-concurrency logic.',
+  },
+  'HCLTech GET': {
+    company: 'HCLTech', tier: 'Graduate Engineer Trainee (6.0 LPA)',
+    skills: { 'Data Structures': 65, 'SQL & DBMS': 65, 'OOP & Java': 65, 'Communication': 65 },
+    cgpa: 6.0, backlogs: 0,
+    description: 'HCL GET focuses on web technologies, data structures, and database querying.',
+  },
+  'Wipro Elite': {
+    company: 'Wipro', tier: 'Elite (3.5 LPA)',
+    skills: { 'Communication': 60, 'OOP & Java': 60, 'SQL & DBMS': 55 },
+    cgpa: 6.0, backlogs: 0,
+    description: 'Wipro Elite seeks well-rounded candidates with strong communication.',
+  },
+  'Wipro Turbo': {
+    company: 'Wipro', tier: 'Turbo (6.5 LPA)',
+    skills: { 'Data Structures': 70, 'Algorithms': 65, 'OOP & Java': 70, 'SQL & DBMS': 65 },
+    cgpa: 6.5, backlogs: 0,
+    description: 'Wipro Turbo requires intermediate DSA, OOPs concepts, and analytical coding.',
+  },
+  'Accenture AASE': {
+    company: 'Accenture', tier: 'Advanced ASE (6.5 LPA)',
+    skills: { 'Data Structures': 70, 'OOP & Java': 70, 'Communication': 70, 'SQL & DBMS': 65 },
+    cgpa: 6.5, backlogs: 0,
+    description: 'Accenture AASE requires technical coding, pseudocode mastery, and cloud basics.',
+  },
+  'Capgemini Analyst': {
+    company: 'Capgemini', tier: 'Analyst (4.0 LPA)',
+    skills: { 'Communication': 70, 'OOP & Java': 60, 'SQL & DBMS': 60 },
+    cgpa: 6.0, backlogs: 0,
+    description: 'Capgemini evaluates game-based aptitude, pseudocode, and spoken communication.',
+  },
+  'Tech Mahindra Super Coder': {
+    company: 'Tech Mahindra', tier: 'Super Coder (7.0 LPA)',
+    skills: { 'Data Structures': 75, 'Algorithms': 70, 'OOP & Java': 70, 'SQL & DBMS': 70 },
+    cgpa: 6.0, backlogs: 0,
+    description: 'Tech Mahindra Super Coder demands complex algorithmic coding and API design.',
+  },
+  'Amazon SDE-I': {
+    company: 'Amazon', tier: 'SDE-I (32 LPA)',
+    skills: { 'Data Structures': 85, 'Algorithms': 80, 'System Design': 70, 'Communication': 75 },
+    cgpa: 7.0, backlogs: 0,
+    description: 'Amazon focuses on 14 Leadership Principles + advanced DSA (Trees, Graphs, DP).',
+  },
+  'Google L3 SE': {
+    company: 'Google', tier: 'L3 Software Engineer (35 LPA)',
+    skills: { 'Data Structures': 90, 'Algorithms': 90, 'System Design': 75, 'OOP & Java': 80 },
+    cgpa: 7.5, backlogs: 0,
+    description: 'Google requires top-tier algorithmic problem solving, clean code, and Googliness.',
   },
 }
 
 const COMPANY_LOGOS = {
-  TCS: '🔵', Infosys: '🟣', Wipro: '⭕', Google: '🔴',
-  Amazon: '🟠', Microsoft: '🟦', Cognizant: '🔷',
+  'TCS Ninja': '🔵', 'TCS Digital': '🟣', 'TCS Prime': '⚡',
+  'Infosys SE': '🟣', 'Infosys SP': '💎',
+  'Cognizant GenC': '🔷', 'Cognizant GenC Pro': '🚀',
+  'Amex Tech Associate': '💳', 'HCLTech GET': '🔴',
+  'Wipro Elite': '⭕', 'Wipro Turbo': '🏎️',
+  'Accenture AASE': '🟣', 'Capgemini Analyst': '🔵',
+  'Tech Mahindra Super Coder': '🔴', 'Amazon SDE-I': '🟠', 'Google L3 SE': '🔴',
 }
 
 function GapBar({ skill, studentScore, requiredScore }) {

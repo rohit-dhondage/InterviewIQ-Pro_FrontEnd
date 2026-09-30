@@ -7,7 +7,7 @@ import Landing from './pages/Landing'
 
 // Auth Pages (Portals)
 import StudentLogin from './pages/auth/StudentLogin'
-// import StudentRegister from './pages/auth/StudentRegister' // TODO: Implement StudentRegister
+import StudentRegister from './pages/auth/StudentRegister'
 import TpoLogin from './pages/auth/TpoLogin'
 import AdminLogin from './pages/auth/AdminLogin'
 import CompanyLogin from './pages/auth/CompanyLogin'
@@ -20,6 +20,11 @@ import StudentInterviews from './pages/student/Interviews'
 import InterviewSession from './pages/student/InterviewSession'
 import StudentAnalytics from './pages/student/Analytics'
 import StudentProfile from './pages/student/Profile'
+import StudentResume from './pages/student/Resume'
+import StudentRoadmap from './pages/student/Roadmap'
+import StudentPractice from './pages/student/Practice'
+import StudentSkillGap from './pages/student/SkillGap'
+import StudentDoubts from './pages/student/Doubts'
 
 // TPO Pages
 import TpoLayout from './components/Layout/TpoLayout'
@@ -50,7 +55,7 @@ export default function App() {
           
           {/* Auth / Portals */}
           <Route path="/student/login" element={<StudentLogin />} />
-          <Route path="/student/register" element={<Navigate to="/student/login" replace />} /> {/* Placeholder */}
+          <Route path="/student/register" element={<StudentRegister />} />
           <Route path="/institution/tpo/login" element={<TpoLogin />} />
           <Route path="/institution/admin/login" element={<AdminLogin />} />
           <Route path="/company/login" element={<CompanyLogin />} />
@@ -68,6 +73,11 @@ export default function App() {
             <Route path="interviews/:sessionId" element={<InterviewSession />} />
             <Route path="analytics" element={<StudentAnalytics />} />
             <Route path="profile" element={<StudentProfile />} />
+            <Route path="resume" element={<StudentResume />} />
+            <Route path="roadmap" element={<StudentRoadmap />} />
+            <Route path="practice" element={<StudentPractice />} />
+            <Route path="skill-gap" element={<StudentSkillGap />} />
+            <Route path="doubts" element={<StudentDoubts />} />
           </Route>
 
           {/* TPO Portal */}

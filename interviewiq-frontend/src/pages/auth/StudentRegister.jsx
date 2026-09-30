@@ -17,10 +17,45 @@ const YEAR_OPTIONS = [
 ]
 
 const TARGET_ROLES = [
-  'Software Engineer', 'Frontend Developer', 'Backend Developer',
-  'Full Stack Developer', 'Data Analyst', 'Data Scientist',
-  'DevOps Engineer', 'Cloud Engineer', 'Cybersecurity Analyst',
-  'Business Analyst', 'System Analyst', 'Product Manager',
+  'TCS (Ninja / Digital / Prime)',
+  'Infosys (SE / DSE / Specialist Programmer)',
+  'Cognizant (GenC / Elevate / GenC Pro)',
+  'American Express (Tech Associate / SE)',
+  'HCLTech (First Careers / GET)',
+  'Wipro (Elite / Turbo / Velocity)',
+  'Accenture (ASE / Advanced ASE)',
+  'Capgemini (Analyst / Differential Hire)',
+  'Tech Mahindra (Super Coder)',
+  'Amazon (SDE-I / SDE-II)',
+  'Google (L3 Software Engineer)',
+  'Software Engineer (General)',
+  'Full Stack Developer',
+  'Frontend Developer',
+  'Backend Developer',
+  'Data Engineer / Analyst',
+]
+
+const NASHIK_COLLEGES = [
+  { id: 1, name: "MET's Institute of Engineering, Bhujbal Knowledge City (MET BKC), Nashik", address: "Adgaon, Nashik" },
+  { id: 2, name: "K. K. Wagh Institute of Engineering Education & Research (KKWIEER), Nashik", address: "Amrutdham, Panchavati, Nashik" },
+  { id: 3, name: "PVG's College of Engineering & S. S. Dhamankar Institute of Management (PVGCOE), Nashik", address: "Mhasrul, Dindori Road, Nashik" },
+  { id: 4, name: "NDMVP Samaj's KBT College of Engineering (KBTCOE), Nashik", address: "Gangapur Road, Nashik" },
+  { id: 5, name: "Sandip Institute of Technology & Research Centre (SITRC), Nashik", address: "Trimbak Road, Mahiravani, Nashik" },
+  { id: 6, name: "Guru Gobind Singh College of Engineering & Research Centre (GCOERC), Nashik", address: "Pathardi Phata, Nashik" },
+  { id: 7, name: "Matoshri College of Engineering & Research Centre (MCOERC), Nashik", address: "Eklahare, Near Odha, Nashik" },
+  { id: 8, name: "GES's R. H. Sapat College of Engineering, Management & Research, Nashik", address: "Prashant Nagar, Nashik" },
+  { id: 9, name: "Sir Visvesvaraya Institute of Technology (SVIT), Chincholi, Nashik", address: "Chincholi, Sinnar, Nashik" },
+  { id: 10, name: "Brahma Valley College of Engineering & Research Centre, Nashik", address: "Anjaneri, Trimbakeshwar, Nashik" },
+  { id: 11, name: "Gokhale Education Society's JDC Bytco Institute of Management, Nashik", address: "College Road, Nashik" },
+  { id: 12, name: "SNJB's Late Sau KB Jain College of Engineering, Chandwad, Nashik", address: "Neminagar, Chandwad, Nashik" }
+]
+
+const DEFAULT_DEPARTMENTS = [
+  { id: 1, name: "Computer Engineering" },
+  { id: 2, name: "Information Technology" },
+  { id: 3, name: "Artificial Intelligence & Data Science (AI & DS)" },
+  { id: 4, name: "Electronics & Telecommunication (E&TC)" },
+  { id: 5, name: "Mechanical Engineering" }
 ]
 
 export default function StudentRegister() {
@@ -30,23 +65,30 @@ export default function StudentRegister() {
 
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [colleges, setColleges] = useState([])
-  const [departments, setDepartments] = useState([])
+  const [colleges, setColleges] = useState(NASHIK_COLLEGES)
+  const [departments, setDepartments] = useState(DEFAULT_DEPARTMENTS)
   const [step, setStep] = useState(1) // 2-step form
 
   const selectedCollegeId = watch('collegeId')
 
   useEffect(() => {
-    api.get('/colleges').then(r => setColleges(r.data)).catch(() => setColleges([]))
+    api.get('/colleges')
+      .then(r => {
+        if (r.data && r.data.length > 0) setColleges(r.data)
+      })
+      .catch(() => setColleges(NASHIK_COLLEGES))
   }, [])
 
   useEffect(() => {
     if (selectedCollegeId) {
       api.get(`/colleges/${selectedCollegeId}/departments`)
-        .then(r => setDepartments(r.data))
-        .catch(() => setDepartments([]))
+        .then(r => {
+          if (r.data && r.data.length > 0) setDepartments(r.data)
+          else setDepartments(DEFAULT_DEPARTMENTS)
+        })
+        .catch(() => setDepartments(DEFAULT_DEPARTMENTS))
     } else {
-      setDepartments([])
+      setDepartments(DEFAULT_DEPARTMENTS)
     }
   }, [selectedCollegeId])
 

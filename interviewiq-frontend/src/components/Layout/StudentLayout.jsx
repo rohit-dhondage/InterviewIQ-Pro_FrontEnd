@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import {
   Home, Video, FileText, Map, Briefcase, 
@@ -21,8 +21,18 @@ const navItems = [
 export default function StudentLayout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleLogout = () => { logout(); navigate('/') }
+
+  const segment = location.pathname.split('/').filter(Boolean).pop()
+  const LABELS = {
+    dashboard: 'Dashboard', interviews: 'AI Interviews', resume: 'Resume Analyzer',
+    roadmap: 'Learning Roadmap', practice: 'Practice Interview', analytics: 'My Progress',
+    drives: 'Placement Drives', 'skill-gap': 'Skill Gap Analysis', doubts: 'Doubt Solver',
+    profile: 'Profile',
+  }
+  const pageLabel = LABELS[segment] || 'Dashboard'
 
   return (
     <div className="flex min-h-screen font-sans bg-slate-50 text-slate-900">
@@ -41,14 +51,13 @@ export default function StudentLayout() {
           </span>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 px-4 py-6 flex flex-col gap-1.5 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 px-4 py-5 flex flex-col gap-1 overflow-y-auto">
           {navItems.map(({ to, icon: Icon, label }) => (
             <NavLink key={to} to={to}
               className={({ isActive }) => 
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   isActive 
-                    ? 'bg-blue-600/10 text-blue-400' 
+                    ? 'bg-blue-600/10 text-blue-400 border border-blue-800/40' 
                     : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
                 }`
               }>
@@ -77,7 +86,9 @@ export default function StudentLayout() {
         {/* Top Header */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20">
           <div className="flex items-center gap-2 text-sm text-slate-500">
-            <Home size={16} /> / Dashboard
+            <Home size={15} />
+            <span>/</span>
+            <span className="text-slate-700 font-medium">{pageLabel}</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
@@ -85,7 +96,7 @@ export default function StudentLayout() {
                 <div className="text-sm font-semibold text-slate-900">{user?.fullName || 'Student Name'}</div>
                 <div className="text-xs text-slate-500">Student</div>
               </div>
-              <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+              <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
                 {user?.fullName?.charAt(0) || 'S'}
               </div>
             </div>

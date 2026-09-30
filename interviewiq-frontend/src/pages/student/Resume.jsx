@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import {
   Upload, FileText, CheckCircle2, AlertCircle, Loader2,
   User, Phone, Mail, Star, Briefcase, Code2, GraduationCap,
-  Lightbulb, TrendingUp, RefreshCw, ChevronRight, Sparkles, BarChart3
+  Lightbulb, TrendingUp, RefreshCw, ChevronRight, Sparkles, BarChart3, Download
 } from 'lucide-react'
+import { jsPDF } from 'jspdf'
 import api from '../../api/axios'
 
 const SCORE_CATEGORIES = [
@@ -106,6 +107,97 @@ export default function Resume() {
     } finally {
       setUploading(false)
     }
+  }
+
+  const downloadPdfReport = () => {
+    if (!result) return
+    const doc = new jsPDF()
+    
+    // Header banner
+    doc.setFillColor(15, 23, 42)
+    doc.rect(0, 0, 210, 36, 'F')
+    doc.setTextColor(255, 255, 255)
+    doc.setFontSize(20)
+    doc.setFont('helvetica', 'bold')
+    doc.text('InterviewIQ Pro - Resume Analysis Report', 14, 20)
+    
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(148, 163, 184)
+    doc.text(`File: ${result.fileName || file?.name || 'Resume.pdf'}  |  Date: ${new Date().toLocaleDateString()}`, 14, 29)
+    
+    let y = 46
+    
+    // Summary section
+    doc.setTextColor(15, 23, 42)
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Executive Summary & Scores', 14, y)
+    y += 6
+    doc.setDrawColor(226, 232, 240)
+    doc.line(14, y, 196, y)
+    y += 10
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`Overall Resume Score: ${result.overallScore} / 100`, 14, y)
+    doc.text(`ATS Compatibility Score: ${result.atsScore ?? result.overallScore} / 100`, 110, y)
+    y += 14
+    
+    // Detected Skills
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Detected Technical Skills', 14, y)
+    y += 6
+    doc.line(14, y, 196, y)
+    y += 10
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    const skillsText = (result.extractedSkills || []).join(', ') || 'No specific technical keywords detected.'
+    const splitSkills = doc.splitTextToSize(skillsText, 180)
+    doc.text(splitSkills, 14, y)
+    y += (splitSkills.length * 6) + 10
+    
+    // Key Strengths
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(16, 185, 129)
+    doc.text('Key Strengths', 14, y)
+    y += 6
+    doc.setDrawColor(226, 232, 240)
+    doc.line(14, y, 196, y)
+    y += 10
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(51, 65, 85)
+    ;(result.strengths || []).forEach(st => {
+      const splitSt = doc.splitTextToSize(`• ${st}`, 180)
+      doc.text(splitSt, 14, y)
+      y += (splitSt.length * 6)
+    })
+    y += 8
+    
+    // Recommendations
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(217, 119, 6)
+    doc.text('Actionable Recommendations & Improvements', 14, y)
+    y += 6
+    doc.line(14, y, 196, y)
+    y += 10
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(51, 65, 85)
+    ;(result.improvements || []).forEach(imp => {
+      const splitImp = doc.splitTextToSize(`• ${imp}`, 180)
+      doc.text(splitImp, 14, y)
+      y += (splitImp.length * 6)
+    })
+    
+    doc.save(`InterviewIQ_Resume_Analysis_${(result.fileName || 'Report').replace(/\.[^/.]+$/, '')}.pdf`)
   }
 
   const overallColor = result
@@ -214,18 +306,26 @@ export default function Resume() {
         /* ── Analysis Results ── */
         <div className="space-y-6 animate-fade-up">
 
-          {/* Header + Re-upload */}
+          {/* Header + Re-upload + Download PDF */}
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-white">Analysis Complete</h2>
               <p className="text-sm text-slate-400 mt-0.5">{result.fileName || file?.name}</p>
             </div>
-            <button
-              onClick={() => { setResult(null); setFile(null) }}
-              className="btn-outline text-sm flex items-center gap-2"
-            >
-              <RefreshCw size={14} /> Reanalyze
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={downloadPdfReport}
+                className="btn-primary text-sm flex items-center gap-2"
+              >
+                <Download size={14} /> Download PDF Report
+              </button>
+              <button
+                onClick={() => { setResult(null); setFile(null) }}
+                className="btn-outline text-sm flex items-center gap-2"
+              >
+                <RefreshCw size={14} /> Reanalyze
+              </button>
+            </div>
           </div>
 
           {/* Score Cards Row */}
