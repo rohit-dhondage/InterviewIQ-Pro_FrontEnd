@@ -36,6 +36,27 @@ export default function Profile() {
     }
   }
 
+  const [saving, setSaving] = useState(false)
+  const [savedMsg, setSavedMsg] = useState('')
+
+  const handleSaveProfile = async () => {
+    setSaving(true)
+    setSavedMsg('')
+    try {
+      await api.put('/students/me/profile', {
+        cgpa: profileData?.cgpa,
+        year: profileData?.year,
+        rollNo: profileData?.rollNo,
+      })
+      setSavedMsg('Profile updated successfully!')
+      setTimeout(() => setSavedMsg(''), 3000)
+    } catch (err) {
+      console.error('Failed to update profile', err)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const handleRemoveSkill = (skillToRemove) => {
     setSkills(skills.filter(s => s !== skillToRemove))
   }
@@ -158,8 +179,12 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-4">
-            <button className="btn btn-primary px-8">Save Changes</button>
+          <div className="flex items-center justify-end gap-4 pt-4">
+            {savedMsg && <span className="text-xs text-emerald-400 font-medium">{savedMsg}</span>}
+            <button onClick={handleSaveProfile} disabled={saving} className="btn btn-primary px-8 flex items-center gap-2">
+              {saving && <Loader2 className="animate-spin" size={16} />}
+              Save Changes
+            </button>
           </div>
         </div>
       </div>

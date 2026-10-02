@@ -172,11 +172,22 @@ export default function SkillGap() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.get('/analytics/me')
-      .then(res => setStudentData(res.data))
-      .catch(() => {})
-      .finally(() => setLoading(false))
+    Promise.all([
+      api.get('/analytics/me').catch(() => null),
+      api.get('/students/me/preferences').catch(() => null)
+    ]).then(([analyticsRes, prefRes]) => {
+      if (analyticsRes?.data) setStudentData(analyticsRes.data)
+      if (prefRes?.data?.targetCompanies?.length > 0) {
+        const comp = prefRes.data.targetCompanies[0]
+        if (COMPANY_REQUIREMENTS[comp]) setSelectedCompany(comp)
+      }
+    }).finally(() => setLoading(false))
   }, [])
+
+  const handleCompanyChange = (compKey) => {
+    setSelectedCompany(compKey)
+    api.put('/students/me/preferences/target-companies', { targetCompanies: [compKey] }).catch(() => {})
+  }
 
   const company = COMPANY_REQUIREMENTS[selectedCompany]
   const requiredSkills = company?.skills || {}
@@ -224,7 +235,7 @@ export default function SkillGap() {
           {Object.keys(COMPANY_REQUIREMENTS).map(c => (
             <button
               key={c}
-              onClick={() => setSelectedCompany(c)}
+              onClick={() => handleCompanyChange(c)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                 selectedCompany === c
                   ? 'border-violet-500/60 bg-violet-500/15 text-violet-300'

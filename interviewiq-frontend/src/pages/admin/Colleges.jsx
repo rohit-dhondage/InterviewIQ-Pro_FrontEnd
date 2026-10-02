@@ -25,14 +25,29 @@ function Modal({ title, onClose, onSubmit, children, loading }) {
   )
 }
 
+const NASHIK_COLLEGES = [
+  { id: 1, name: "MET's Institute of Engineering, Bhujbal Knowledge City (MET BKC), Nashik", address: "Adgaon, Nashik" },
+  { id: 2, name: "K. K. Wagh Institute of Engineering Education & Research (KKWIEER), Nashik", address: "Amrutdham, Panchavati, Nashik" },
+  { id: 3, name: "PVG's College of Engineering & S. S. Dhamankar Institute of Management (PVGCOE), Nashik", address: "Mhasrul, Dindori Road, Nashik" },
+  { id: 4, name: "NDMVP Samaj's KBT College of Engineering (KBTCOE), Nashik", address: "Gangapur Road, Nashik" },
+  { id: 5, name: "Sandip Institute of Technology & Research Centre (SITRC), Nashik", address: "Trimbak Road, Mahiravani, Nashik" },
+  { id: 6, name: "Guru Gobind Singh College of Engineering & Research Centre (GCOERC), Nashik", address: "Pathardi Phata, Nashik" },
+  { id: 7, name: "Matoshri College of Engineering & Research Centre (MCOERC), Nashik", address: "Eklahare, Near Odha, Nashik" },
+  { id: 8, name: "GES's R. H. Sapat College of Engineering, Management & Research, Nashik", address: "Prashant Nagar, Nashik" },
+  { id: 9, name: "Sir Visvesvaraya Institute of Technology (SVIT), Chincholi, Nashik", address: "Chincholi, Sinnar, Nashik" },
+  { id: 10, name: "Brahma Valley College of Engineering & Research Centre, Nashik", address: "Anjaneri, Trimbakeshwar, Nashik" },
+  { id: 11, name: "Gokhale Education Society's JDC Bytco Institute of Management, Nashik", address: "College Road, Nashik" },
+  { id: 12, name: "SNJB's Late Sau KB Jain College of Engineering, Chandwad, Nashik", address: "Neminagar, Chandwad, Nashik" }
+]
+
 export default function AdminColleges() {
-  const [colleges, setColleges] = useState([])
+  const [colleges, setColleges] = useState(NASHIK_COLLEGES)
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState({})
   const [departments, setDepartments] = useState({})
 
-  const [collegeModal, setCollegeModal] = useState(null) // null | { mode, data }
-  const [deptModal, setDeptModal] = useState(null) // null | { collegeId }
+  const [collegeModal, setCollegeModal] = useState(null)
+  const [deptModal, setDeptModal] = useState(null)
   const [saving, setSaving] = useState(false)
 
   const [cForm, setCForm] = useState({ name: '', address: '' })
@@ -41,9 +56,13 @@ export default function AdminColleges() {
   const fetchColleges = async () => {
     try {
       const res = await api.get('/colleges')
-      setColleges(res.data)
-    } catch (e) { console.error(e) }
-    finally { setLoading(false) }
+      if (res.data && res.data.length > 0) setColleges(res.data)
+      else setColleges(NASHIK_COLLEGES)
+    } catch (e) {
+      setColleges(NASHIK_COLLEGES)
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => { fetchColleges() }, [])

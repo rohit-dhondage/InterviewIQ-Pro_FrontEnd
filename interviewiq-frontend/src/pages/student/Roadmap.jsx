@@ -636,6 +636,24 @@ export default function Roadmap() {
 
   const currentPathway = COMPANY_PATHWAYS[selectedCompanyKey] || COMPANY_PATHWAYS.TCS
 
+  useEffect(() => {
+    api.get('/students/me/preferences')
+      .then(res => {
+        if (res.data?.targetCompanies && res.data.targetCompanies.length > 0) {
+          const comp = res.data.targetCompanies[0]
+          if (COMPANY_PATHWAYS[comp]) {
+            setSelectedCompanyKey(comp)
+          }
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const handleSelectCompany = (compKey) => {
+    setSelectedCompanyKey(compKey)
+    api.put('/students/me/preferences/target-companies', { targetCompanies: [compKey] }).catch(() => {})
+  }
+
   const toggleTopic = (topicId) => {
     setCheckedTopics(prev => ({ ...prev, [topicId]: !prev[topicId] }))
   }
@@ -684,7 +702,7 @@ export default function Roadmap() {
               <button
                 key={compKey}
                 onClick={() => {
-                  setSelectedCompanyKey(compKey)
+                  handleSelectCompany(compKey)
                   setExpandedStage(1)
                 }}
                 className={`flex items-center gap-2 p-3 rounded-xl border text-left transition-all ${

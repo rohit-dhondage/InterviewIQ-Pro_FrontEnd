@@ -54,9 +54,15 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-3">
           <select className="bg-slate-900 border border-slate-700 text-sm text-white font-semibold rounded-xl px-4 py-2.5 outline-none cursor-pointer">
             <option>All Colleges (System-wide)</option>
-            <option>D. J. Sanghvi College of Engineering</option>
-            <option>V J T I Mumbai</option>
-            <option>K. J. Somaiya Institute</option>
+            <option>MET's Institute of Engineering (MET BKC) Nashik</option>
+            <option>K. K. Wagh Institute (KKWIEER) Nashik</option>
+            <option>PVG's College of Engineering (PVGCOE) Nashik</option>
+            <option>NDMVP's KBT College of Engineering Nashik</option>
+            <option>Sandip Institute (SITRC) Nashik</option>
+            <option>Guru Gobind Singh College (GCOERC) Nashik</option>
+            <option>Matoshri College of Engineering (MCOERC) Nashik</option>
+            <option>GES's R. H. Sapat College Nashik</option>
+            <option>Sir Visvesvaraya Institute (SVIT) Chincholi</option>
           </select>
           <select className="bg-slate-900 border border-slate-700 text-sm text-white font-semibold rounded-xl px-4 py-2.5 outline-none cursor-pointer">
             <option>Academic Year 2025-2026</option>
