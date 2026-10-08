@@ -186,6 +186,15 @@ export default function InterviewSession() {
     recognition.start()
   }
 
+  const [sessionMeta, setSessionMeta] = useState({
+    company: 'Target MNC',
+    role: 'Software Engineer',
+    round: 'Technical Round',
+    topics: ['Java', 'Data Structures & Algorithms'],
+    difficulty: 'Medium',
+    score: 0
+  })
+
   // Start Session API call
   useEffect(() => {
     const startSession = async () => {
@@ -194,14 +203,26 @@ export default function InterviewSession() {
         const qText = res.data.question || 'Describe your approach to solve the problem efficiently.'
         setQuestion(qText)
         speakQuestion(qText)
+
+        if (res.data) {
+          setSessionMeta({
+            company: res.data.company || 'Target MNC',
+            role: res.data.role || 'Software Engineer',
+            round: res.data.round || 'Technical Assessment',
+            topics: res.data.topics || ['Java', 'DSA'],
+            difficulty: res.data.difficulty || 'Medium',
+            score: res.data.score || 0
+          })
+        }
+
         if (res.data.finished) {
           setFinished(true)
           setRawFeedbackText(res.data.feedback)
           setActiveTab('scorecard')
         }
       } catch (err) {
-        console.warn('Backend unavailable, launching Microsoft Assessment demo question:', err)
-        const demoQ = 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.\n\nExample:\nInput: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: Because nums[0] + nums[1] == 9, we return [0, 1].'
+        console.warn('Backend unavailable, launching topic-based assessment question:', err)
+        const demoQ = 'Discuss the key technical principles of object-oriented design and memory management in Java. How do you optimize algorithm performance under high-concurrency environments?'
         setQuestion(demoQ)
         speakQuestion(demoQ)
       } finally {
@@ -630,53 +651,43 @@ export default function InterviewSession() {
             </div>
 
 
-            {/* TAB CONTENT 1: Problem Statement */}
+            {/* TAB CONTENT 1: Dynamic Problem Statement from Spring AI Backend */}
             {activeTab === 'problem' && (
               <div className="p-6 flex-1 overflow-y-auto space-y-6">
-                <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
                   <div>
-                    <h2 className="text-xl font-bold text-white mb-1">Two Sum - Optimal Hash Target Lookup</h2>
-                    <div className="flex items-center gap-3 text-xs">
-                      <span className="px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 font-bold border border-amber-500/30">
-                        Medium Difficulty
+                    <h2 className="text-xl font-bold text-white mb-1.5">
+                      {sessionMeta.company} Technical Challenge — Round #{questionCount}
+                    </h2>
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
+                      <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">
+                        {sessionMeta.difficulty || 'Medium'} Difficulty
                       </span>
-                      <span className="text-slate-400">Microsoft SDE-II Standard Assessment</span>
-                      <span className="text-slate-500">• Target: O(N) Time Complexity</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">
+                        {sessionMeta.company || 'Target MNC'}
+                      </span>
+                      {sessionMeta.topics && sessionMeta.topics.map(t => (
+                        <span key={t} className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                          {t}
+                        </span>
+                      ))}
                     </div>
                   </div>
 
                   <button
                     onClick={() => setActiveTab('ide')}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg shadow-indigo-600/20"
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg shadow-indigo-600/20 shrink-0"
                   >
                     Open Code Editor <ChevronRight size={16} />
                   </button>
                 </div>
 
-                <div className="text-sm text-slate-300 space-y-4 leading-relaxed font-sans">
-                  <p>
-                    Given an array of integers <code className="bg-slate-800 text-indigo-300 px-1.5 py-0.5 rounded font-mono">nums</code> and an integer <code className="bg-slate-800 text-indigo-300 px-1.5 py-0.5 rounded font-mono">target</code>, return indices of the two numbers such that they add up to target.
+                <div className="text-sm text-slate-200 space-y-4 leading-relaxed font-sans bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+                  <p className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+                    Live Question Statement (Generated via Spring AI Backend for Selected Topics):
                   </p>
-
-                  <p>
-                    You may assume that each input would have <strong>exactly one solution</strong>, and you may not use the same element twice. You can return the answer in any order.
-                  </p>
-
-                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 font-mono text-xs text-slate-300 space-y-2">
-                    <p className="font-bold text-indigo-400 uppercase font-sans tracking-wider text-[11px]">Example 1:</p>
-                    <p><strong className="text-slate-400">Input:</strong> nums = [2,7,11,15], target = 9</p>
-                    <p><strong className="text-slate-400">Output:</strong> [0,1]</p>
-                    <p><strong className="text-slate-400">Explanation:</strong> Because nums[0] + nums[1] == 9, we return [0, 1].</p>
-                  </div>
-
-                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 font-mono text-xs text-slate-300 space-y-2">
-                    <p className="font-bold text-indigo-400 uppercase font-sans tracking-wider text-[11px]">Constraints:</p>
-                    <ul className="list-disc list-inside space-y-1 text-slate-400 font-mono">
-                      <li>2 &lt;= nums.length &lt;= 10^4</li>
-                      <li>-10^9 &lt;= nums[i] &lt;= 10^9</li>
-                      <li>-10^9 &lt;= target &lt;= 10^9</li>
-                      <li>Only one valid answer exists.</li>
-                    </ul>
+                  <div className="whitespace-pre-line text-sm text-slate-100 font-sans leading-relaxed">
+                    {question}
                   </div>
                 </div>
               </div>
