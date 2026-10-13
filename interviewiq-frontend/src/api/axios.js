@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const rawBaseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1'
+const rawBaseURL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD
+    ? 'https://interviewiq-pro.onrender.com/api/v1'
+    : 'http://localhost:8080/api/v1')
 // Normalize: remove trailing slashes and ensure /api/v1 endpoint path is present
 const trimmedBaseURL = rawBaseURL.trim().replace(/\/+$/, '')
 const baseURL = trimmedBaseURL.endsWith('/api/v1') ? trimmedBaseURL : `${trimmedBaseURL}/api/v1`
