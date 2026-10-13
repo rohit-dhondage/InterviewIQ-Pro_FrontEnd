@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+const rawBaseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1'
+// Normalize: remove trailing slashes and ensure /api/v1 endpoint path is present
+const trimmedBaseURL = rawBaseURL.trim().replace(/\/+$/, '')
+const baseURL = trimmedBaseURL.endsWith('/api/v1') ? trimmedBaseURL : `${trimmedBaseURL}/api/v1`
+
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -9,8 +14,12 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const stored = localStorage.getItem('iq_user')
   if (stored) {
-    const { token } = JSON.parse(stored)
-    if (token) config.headers.Authorization = `Bearer ${token}`
+    try {
+      const { token } = JSON.parse(stored)
+      if (token) config.headers.Authorization = `Bearer ${token}`
+    } catch {
+      localStorage.removeItem('iq_user')
+    }
   }
   return config
 })
